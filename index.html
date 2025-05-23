@@ -123,9 +123,7 @@
       user-select: none;
     }
 
-    /* حذف کد قبلی spinner */
-
-    /* استایل جدید برای دات‌ها */
+    /* استایل دات‌ها */
     .loader-dots {
       display: flex;
       justify-content: center;
@@ -162,7 +160,7 @@
   </style>
 </head>
 <body>
-  <!-- جایگزین کد قبلی لودینگ -->
+  <!-- کد لودینگ -->
   <div id="loading-screen">
     <div class="loader-dots">
       <span></span><span></span><span></span>
@@ -232,16 +230,15 @@
       localStorage.setItem('books', JSON.stringify([]));
     }
 
-    // تابع مخفی کردن لودینگ که هر موقع خواستی صداش بزن
+    // تابع مخفی کردن لودینگ
     function hideLoading() {
       const loader = document.getElementById('loading-screen');
       if(loader) {
         loader.style.display = 'none';
       }
     }
-
-    // نمونه: مخفی کردن لودینگ بعد 5 ثانیه (می‌تونی حذفش کنی یا تغییر بدی)
-    setTimeout(hideLoading, 1800);
+    
+    setTimeout(hideLoading, 1200);
 
     function clearLibrary() {
       const confirmClear = confirm("آیا مطمئن هستید که می‌خواهید تمام اطلاعات کتابخانه حذف شود؟");
