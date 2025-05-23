@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>افزودن کتاب</title>
+  <link rel="stylesheet" href="https://cdn.fontcdn.ir/Font/Persian/Vazir/Vazir.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    * {
+      font-family: 'Vazir', sans-serif;
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: url('https://ghab24.com/movafaghiat/media/appmedia/image/GHAB%20MEDIA%20DESKTOP%20866-min.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 40px 20px;
+    }
+
+    /* استایل لودینگ */
+    #loading-screen {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.85);
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: #00c3ff;
+      font-weight: bold;
+      font-size: 1.3rem;
+    }
+
+    .progress-bar {
+      width: 80%;
+      height: 6px;
+      background: #222;
+      border-radius: 3px;
+      overflow: hidden;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .progress-bar::before {
+      content: "";
+      display: block;
+      height: 100%;
+      width: 30%;
+      background: linear-gradient(90deg, #00c3ff, #004466);
+      animation: loadingMove 1.5s linear infinite;
+      border-radius: 3px;
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+
+    @keyframes loadingMove {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(300%); }
+    }
+
+    .loading-text {
+      font-size: 1.2rem;
+    }
+
+    .container {
+      background-color: rgba(0, 0, 0, 0.75);
+      border-radius: 20px;
+      padding: 30px 20px;
+      max-width: 500px;
+      width: 100%;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 1.8rem;
+      color: #00d4ff;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border: none;
+      border-radius: 10px;
+      background-color: #eee;
+      font-family: 'Vazir', sans-serif;
+      color: #333;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      background-color: #00c3ff;
+      color: rgb(0, 0, 0);
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.3s;
+      font-family: 'Vazir', sans-serif;
+    }
+
+    button:hover {
+      background-color: #009ecb;
+    }
+
+    .message {
+      margin-top: 15px;
+      text-align: center;
+      color: #ffd700;
+    }
+    .back-link {
+      display: block;
+      text-align: center;
+      margin-top: 30px;
+      color: #00ffc8;
+      text-decoration: none;
+    }
+    .back-link:hover {
+      color: #00bfa6;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- بخش لودینگ -->
+  <div id="loading-screen">
+    <div class="progress-bar"></div>
+    <div class="loading-text">در حال بارگذاری ...</div>
+  </div>
+
+  <div class="container">
+    <h1><i class="fas fa-plus-circle"></i> افزودن کتاب</h1>
+    <form id="addBookForm">
+      <label for="title">عنوان کتاب:</label>
+      <input type="text" id="title" placeholder="مثلاً: خون دلی که لعل شد" required>
+
+      <label for="author">نویسنده:</label>
+      <input type="text" id="author" placeholder="مثلاً: سید علی خامنه ای" required>
+
+      <label for="year">سال انتشار:</label>
+      <input type="number" id="year" placeholder="مثلاً: 1403" required>
+
+      <label for="genre">ژانر:</label>
+      <input type="text" id="genre" placeholder="مثلاً: تاریخ معاصر ایران" required>
+
+      <button type="submit">افزودن کتاب</button>
+    </form>
+    <div class="message" id="message"></div>
+  </div>
+
+  <a class="back-link" href="./Home.html">← بازگشت به صفحه اصلی</a>
+
+  <script>
+    // پنهان کردن لودینگ پس از 1.5 ثانیه
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.getElementById('loading-screen').style.display = 'none';
+      }, 2000);
+    });
+
+    if (!localStorage.getItem('books')) {
+      localStorage.setItem('books', JSON.stringify([]));
+    }
+
+    document.getElementById('addBookForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const title = document.getElementById('title').value.trim();
+      const author = document.getElementById('author').value.trim();
+      const year = parseInt(document.getElementById('year').value);
+      const genre = document.getElementById('genre').value.trim();
+
+      const message = document.getElementById('message');
+
+      if (!title || !author || !year || !genre) {
+        message.textContent = '⚠️ لطفاً همه فیلدها را کامل کنید.';
+        return;
+      }
+
+      const newBook = { title, author, year, genre };
+
+      let books = JSON.parse(localStorage.getItem('books'));
+      books.push(newBook);
+      localStorage.setItem('books', JSON.stringify(books));
+
+      message.textContent = '✅ کتاب با موفقیت افزوده شد!';
+      document.getElementById('addBookForm').reset();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>کتابخانه من</title>
+  <link rel="stylesheet" href="https://cdn.fontcdn.ir/Font/Persian/Vazir/Vazir.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    * {
+      font-family: 'Vazir', sans-serif;
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: url('https://ghab24.com/movafaghiat/media/appmedia/image/GHAB%20MEDIA%20DESKTOP%20866-min.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 40px 20px;
+    }
+
+    .container {
+      background-color: rgba(0, 0, 0, 0.7);
+      border-radius: 20px;
+      padding: 30px 20px;
+      max-width: 1024px;
+      width: 100%;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+    }
+
+    .header-box {
+      background: linear-gradient(90deg, #00c3ff, #004466);
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 0 10px rgba(0, 255, 255, 0.4);
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .header-box h1 {
+      font-size: 1.7rem;
+      color: #000000;
+    }
+
+    .menu {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      justify-content: center;
+    }
+
+    .menu-item {
+      background-color: rgba(255, 255, 255, 0.05);
+      border: 1px solid #00c3ff44;
+      border-radius: 20px;
+      padding: 30px 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+      /* display: inline-block; */
+    }
+
+    .menu-item:hover {
+      background-color: rgba(0, 195, 255, 0.2);
+      transform: translateY(-5px);
+    }
+
+    .menu-item i {
+      font-size: 40px;
+      color: #00c3ff;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .menu-item span {
+      font-size: 1.1rem;
+      color: #fff;
+    }
+
+    footer {
+      margin-top: 40px;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #aaa;
+    }
+
+    @media (max-width: 768px) {
+      .menu {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .menu {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .link_ {
+      text-decoration: none;
+    }
+
+    /* ======== استایل لودینگ ======== */
+    #loading-screen {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 9999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      color: #00c3ff;
+      font-size: 1.2rem;
+      font-weight: bold;
+      user-select: none;
+    }
+
+    /* حذف کد قبلی spinner */
+
+    /* استایل جدید برای دات‌ها */
+    .loader-dots {
+      display: flex;
+      justify-content: center;
+      gap: 1.4rem;
+      margin-bottom: 1.4rem;
+    }
+
+    .loader-dots span {
+      width: 1.4rem;
+      height: 1.4rem;
+      background-color: #00c3ff;
+      border-radius: 50%;
+      display: inline-block;
+      animation: bounce 1.4s infinite ease-in-out both;
+    }
+
+    .loader-dots span:nth-child(1) {
+      animation-delay: -0.32s;
+    }
+    .loader-dots span:nth-child(2) {
+      animation-delay: -0.16s;
+    }
+    .loader-dots span:nth-child(3) {
+      animation-delay: 0;
+    }
+
+    @keyframes bounce {
+      0%, 80%, 100% {
+        transform: scale(0);
+      } 40% {
+        transform: scale(1);
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- جایگزین کد قبلی لودینگ -->
+  <div id="loading-screen">
+    <div class="loader-dots">
+      <span></span><span></span><span></span>
+    </div>
+    در حال بارگذاری ...
+  </div>
+
+  <div class="container">
+    <div class="header-box">
+      <h1>سامانه مدیریت کتابخانه</h1>
+    </div>
+    <div class="menu">
+      <a href="./Search.html" class="link_">
+        <div class="menu-item" onclick="navigateTo('search')">
+          <i class="fas fa-search"></i>
+          <span>جستجو</span>
+        </div>
+      </a>
+      <a href="./Add.html" class="link_">
+        <div class="menu-item" onclick="navigateTo('add')">
+          <i class="fas fa-plus-circle"></i>
+          <span>افزودن کتاب</span>
+        </div>
+      </a>
+      <a href="./Report.html" class="link_">
+        <div class="menu-item" onclick="navigateTo('report')">
+          <i class="fas fa-chart-bar"></i>
+          <span>گزارش ها</span>
+        </div>
+      </a>
+      <a href="./Admin.html" class="link_">
+        <div class="menu-item" onclick="navigateTo('edit')">
+          <i class="fas fa-edit"></i>
+          <span>پنل مدیریت کتابخانه</span>
+        </div>
+      </a>
+      <a href="./Favorites.html" class="link_">
+        <div class="menu-item">
+          <i class="fas fa-heart"></i>
+          <span>علاقه‌مندی ها</span>
+        </div>
+      </a>
+      <a href="./Remove.html" class="link_">
+        <div class="menu-item" onclick="navigateTo('remove')">
+          <i class="fas fa-trash-alt"></i>
+          <span>حذف تکراری ها</span>
+        </div>
+      </a>
+
+      <div class="menu-item" onclick="clearLibrary()">
+        <i class="fas fa-database"></i>
+        <span>حذف کامل اطلاعات</span>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    الَّذينَ قالَ لَهُمُ النّاسُ إِنَّ النّاسَ قَد جَمَعوا لَكُم فَاخشَوهُم فَزادَهُم إيمانًا وَقالوا حَسبُنَا اللَّهُ وَنِعمَ الوَكيلُ ﴿۱۷۳﴾
+    <br>
+    <br>
+    ساخته شده با ❤️ توسط سرباز روح الله 
+  </footer>
+
+  <script>
+    // localStorage structure
+    if (!localStorage.getItem('books')) {
+      localStorage.setItem('books', JSON.stringify([]));
+    }
+
+    // تابع مخفی کردن لودینگ که هر موقع خواستی صداش بزن
+    function hideLoading() {
+      const loader = document.getElementById('loading-screen');
+      if(loader) {
+        loader.style.display = 'none';
+      }
+    }
+
+    // نمونه: مخفی کردن لودینگ بعد 5 ثانیه (می‌تونی حذفش کنی یا تغییر بدی)
+    setTimeout(hideLoading, 1800);
+
+    function clearLibrary() {
+      const confirmClear = confirm("آیا مطمئن هستید که می‌خواهید تمام اطلاعات کتابخانه حذف شود؟");
+      if (confirmClear) {
+        localStorage.removeItem('books');
+        alert("📦 همه اطلاعات کتابخانه حذف شد.");
+        localStorage.setItem('books', JSON.stringify([]));
+      }
+    }
+  </script>
+</body>
+</html>

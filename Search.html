@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>جستجوی پیشرفته کتاب</title>
+  <link rel="stylesheet" href="https://cdn.fontcdn.ir/Font/Persian/Vazir/Vazir.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    * {
+      font-family: 'Vazir', sans-serif;
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: url('https://ghab24.com/movafaghiat/media/appmedia/image/GHAB%20MEDIA%20DESKTOP%20866-min.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+    }
+
+    /* لودینگ */
+    #loading-screen {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.85);
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: #00c3ff;
+      font-weight: bold;
+      font-size: 1.3rem;
+    }
+
+    .progress-bar {
+      width: 80%;
+      height: 6px;
+      background: #222;
+      border-radius: 3px;
+      overflow: hidden;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .progress-bar::before {
+      content: "";
+      display: block;
+      height: 100%;
+      width: 30%;
+      background: linear-gradient(90deg, #00c3ff, #004466);
+      animation: loadingMove 1.5s linear infinite;
+      border-radius: 3px;
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+
+    @keyframes loadingMove {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(300%); }
+    }
+
+    .loading-text {
+      font-size: 1.2rem;
+    }
+
+    .container {
+      background-color: rgba(0,0,0,0.75);
+      padding: 30px;
+      border-radius: 20px;
+      max-width: 600px;
+      width: 100%;
+      box-shadow: 0 0 20px rgba(0,255,255,0.3);
+    }
+
+    h1 {
+      color: #00ffff;
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 1.8rem;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 10px;
+      border: none;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #00d4ff;
+      color: black;
+      font-size: 1rem;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    .results {
+      margin-top: 20px;
+    }
+
+    .book {
+      background-color: rgba(255, 255, 255, 0.1);
+      padding: 15px 15px 10px;
+      margin-bottom: 12px;
+      border-radius: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .book-details {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      flex: 1;
+    }
+
+    .heart-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1.5rem;
+      padding: 6px;
+      color: #ccc;
+      transition: color 0.3s;
+      align-self: center;
+      width: 4rem;
+    }
+
+    .heart-btn:hover {
+      color: #aaa;
+    }
+
+    .heart-btn.active {
+      color: red;
+    }
+
+    .back-link {
+      display: block;
+      text-align: center;
+      margin-top: 30px;
+      color: #00ffc8;
+      text-decoration: none;
+    }
+
+    .back-link:hover {
+      color: #00bfa6;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- لودینگ -->
+  <div id="loading-screen">
+    <div class="progress-bar"></div>
+    <div class="loading-text">در حال بارگذاری ...</div>
+  </div>
+
+  <div class="container">
+    <h1><i class="fas fa-search"></i> جستجوی پیشرفته کتاب</h1>
+    <input type="text" id="searchInput" placeholder="جستجو بر اساس عنوان، نویسنده، ژانر یا سال انتشار و...">
+    <button onclick="searchBooks()">🔍 جستجو</button>
+    <div class="results" id="results"></div>
+  </div>
+
+  <a class="back-link" href="./Home.html">← بازگشت به صفحه اصلی</a>
+
+  <script>
+    // لودینگ
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.getElementById('loading-screen').style.display = 'none';
+      }, 1500);
+    });
+
+    let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+
+    function isSameBook(b1, b2) {
+      return b1.title === b2.title &&
+             b1.author === b2.author &&
+             b1.year === b2.year &&
+             b1.genre === b2.genre;
+    }
+
+    function isFavorite(book) {
+      return favorites.some(fav => isSameBook(fav, book));
+    }
+
+    function toggleFavorite(book) {
+      const index = favorites.findIndex(fav => isSameBook(fav, book));
+      if (index > -1) {
+        favorites.splice(index, 1);
+      } else {
+        favorites.push(book);
+      }
+      localStorage.setItem('favorites', JSON.stringify(favorites));
+      searchBooks();
+    }
+
+    function createHeartButton(book) {
+      const active = isFavorite(book) ? 'active' : '';
+      const iconType = isFavorite(book) ? 'fas' : 'far';
+      return `
+        <button class="heart-btn ${active}" onclick='toggleFavorite(${JSON.stringify(book)})'>
+          <i class="${iconType} fa-heart"></i>
+        </button>`;
+    }
+
+    function searchBooks() {
+      const query = document.getElementById('searchInput').value.toLowerCase().trim();
+      const resultsContainer = document.getElementById('results');
+      resultsContainer.innerHTML = '';
+
+      const books = JSON.parse(localStorage.getItem('books')) || [];
+      const filtered = books.filter(book =>
+        book.title.toLowerCase().includes(query) ||
+        book.author.toLowerCase().includes(query) ||
+        book.genre.toLowerCase().includes(query) ||
+        book.year.toString().includes(query)
+      );
+
+      if (filtered.length === 0) {
+        resultsContainer.innerHTML = '<p>❌ کتابی پیدا نشد.</p>';
+        return;
+      }
+
+      filtered.forEach(book => {
+        const div = document.createElement('div');
+        div.className = 'book';
+        div.innerHTML = `
+          <div class="book-details">
+            <div><strong>عنوان:</strong> ${book.title}</div>
+            <div><strong>نویسنده:</strong> ${book.author}</div>
+            <div><strong>سال انتشار:</strong> ${book.year}</div>
+            <div><strong>ژانر:</strong> ${book.genre}</div>
+          </div>
+          ${createHeartButton(book)}
+        `;
+        resultsContainer.appendChild(div);
+      });
+    }
+  </script>
+</body>
+</html>

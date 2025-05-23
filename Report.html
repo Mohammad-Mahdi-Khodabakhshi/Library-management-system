@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>📊 گزارش‌گیری کتابخانه</title>
+  <link rel="stylesheet" href="https://cdn.fontcdn.ir/Font/Persian/Vazir/Vazir.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Vazir', sans-serif;
+      background: url('https://ghab24.com/movafaghiat/media/appmedia/image/GHAB%20MEDIA%20DESKTOP%20866-min.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: auto;
+      background-color: rgba(0, 0, 0, 0.75);
+      padding: 25px;
+      border-radius: 20px;
+      box-shadow: 0 0 25px rgba(0, 255, 255, 0.2);
+    }
+
+    h2 {
+      text-align: center;
+      color: #00eaff;
+      margin-bottom: 30px;
+      font-size: 2rem;
+    }
+
+    .report-section {
+      margin-bottom: 30px;
+    }
+
+    .section-title {
+      font-size: 1.2rem;
+      color: #00ffc8;
+      margin-bottom: 10px;
+      border-bottom: 2px solid #00ffc8;
+      padding-bottom: 6px;
+      letter-spacing: 1px;
+      font-weight: 600;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 8px;
+      background-color: rgba(255, 255, 255, 0.07);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0, 195, 255, 0.15);
+      font-size: 0.95rem;
+    }
+
+    th, td {
+      padding: 12px 15px;
+      text-align: right;
+      color: #d0f7ff;
+      vertical-align: middle;
+    }
+
+    th {
+      background: linear-gradient(90deg, #00c3ff, #004466);
+      color: #fff;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      user-select: none;
+      box-shadow: inset 0 -3px 8px rgba(255, 255, 255, 0.15);
+    }
+
+    tbody tr {
+      background-color: rgba(0, 195, 255, 0.15);
+      border-radius: 12px;
+      transition: background-color 0.3s ease;
+      cursor: default;
+      box-shadow: 0 3px 8px rgba(0, 195, 255, 0.1);
+    }
+
+    tbody tr:hover {
+      background-color: rgba(0, 195, 255, 0.3);
+      box-shadow: 0 8px 15px rgba(0, 195, 255, 0.3);
+    }
+
+    tbody tr td:first-child,
+    tbody tr th:first-child {
+      border-top-right-radius: 12px;
+      border-bottom-right-radius: 12px;
+    }
+
+    tbody tr td:last-child,
+    tbody tr th:last-child {
+      border-top-left-radius: 12px;
+      border-bottom-left-radius: 12px;
+    }
+
+    #report_ {
+      background: linear-gradient(90deg, #00c3ff, #004466);
+      padding: 0.8rem;
+      border-radius: 0.5rem;
+      color: black;
+      font-size: 1.5rem;
+      box-shadow: 0 0 12px #00c3ff;
+      user-select: none;
+    }
+
+    .heart-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1.4rem;
+      color: #ccc;
+      transition: color 0.3s;
+      float: left;
+    }
+
+    .heart-btn:hover {
+      color: #999;
+    }
+
+    .heart-btn.active {
+      color: #ff3b3b;
+      text-shadow: 0 0 5px #ff3b3b88;
+    }
+
+    .back-link {
+      display: block;
+      text-align: center;
+      margin-top: 30px;
+      color: #00ffc8;
+      text-decoration: none;
+      font-size: 1rem;
+      user-select: none;
+    }
+
+    .back-link:hover {
+      color: #00bfa6;
+    }
+
+    #loading-screen {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.85);
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: #00c3ff;
+      font-weight: bold;
+      font-size: 1.3rem;
+      user-select: none;
+    }
+
+    .progress-bar {
+      width: 80%;
+      height: 6px;
+      background: #222;
+      border-radius: 3px;
+      overflow: hidden;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .progress-bar::before {
+      content: "";
+      display: block;
+      height: 100%;
+      width: 30%;
+      background: linear-gradient(90deg, #00c3ff, #004466);
+      animation: loadingMove 1.5s linear infinite;
+      border-radius: 3px;
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+
+    @keyframes loadingMove {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(300%); }
+    }
+
+    .book-card {
+      background-color: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(0, 255, 255, 0.15);
+      border-radius: 12px;
+      padding: 15px;
+      margin: 15px 0;
+      color: #fff;
+      box-shadow: 0 0 10px rgba(0,255,255,0.1);
+      position: relative;
+      transition: box-shadow 0.3s ease;
+    }
+
+    .book-card:hover {
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+      background-color: rgba(0, 195, 255, 0.1);
+    }
+
+    .book-card div {
+      margin-bottom: 6px;
+    }
+
+    .book-card .heart-btn {
+      float: left;
+      margin-left: 10px;
+      font-size: 1.4rem;
+      color: #bbb;
+      transition: color 0.3s ease;
+    }
+
+    .book-card .heart-btn.active {
+      color: #ff4c4c;
+      text-shadow: 0 0 5px #ff4c4caa;
+    }
+
+    .book-card .heart-btn:hover {
+      color: #ff6666;
+    }
+
+    .book-number {
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      background: #00c3ff;
+      color: black;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 0.9rem;
+      box-shadow: 0 0 5px rgba(0,255,255,0.5);
+      opacity: 0;
+      transform: translateY(-15px) scale(0.7);
+      animation: showNumber 0.6s ease forwards;
+      animation-delay: 0.3s;
+      user-select: none;
+    }
+
+    @keyframes showNumber {
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    /* Responsive */
+    @media (max-width: 650px) {
+      h2, #report_ {
+        font-size: 1.3rem;
+      }
+
+      .section-title {
+        font-size: 1rem;
+      }
+
+      th, td {
+        font-size: 0.85rem;
+        padding: 10px 8px;
+      }
+
+      .heart-btn {
+        font-size: 1.2rem;
+      }
+
+      .book-number {
+        width: 24px;
+        height: 24px;
+        font-size: 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="loading-screen">
+    <div class="progress-bar"></div>
+    <div class="loading-text">در حال بارگذاری ...</div>
+  </div>
+
+  <div class="container">
+    <h2 id="report_">📊 گزارش کامل کتابخانه 📊</h2>
+
+    <div class="report-section" id="totalBooksSection"></div>
+    <div class="report-section" id="booksListSection"></div>
+    <div class="report-section" id="genreRankingSection"></div>
+    <div class="report-section" id="authorRankingSection"></div>
+    <div class="report-section" id="oldestBooksSection"></div>
+    <div class="report-section" id="newestBooksSection"></div>
+  </div>
+  <a class="back-link" href="./Home.html">← بازگشت به صفحه اصلی</a>
+
+  <script>
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.getElementById('loading-screen').style.display = 'none';
+      }, 2000);
+    });
+
+    const books = JSON.parse(localStorage.getItem('books')) || [];
+    let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+
+    function isSameBook(b1, b2) {
+      return b1.title === b2.title && b1.author === b2.author && b1.year === b2.year && b1.genre === b2.genre;
+    }
+
+    function isFavorite(book) {
+      return favorites.some(fav => isSameBook(fav, book));
+    }
+
+    function toggleFavorite(book) {
+      const index = favorites.findIndex(fav => isSameBook(fav, book));
+      if (index > -1) {
+        favorites.splice(index, 1);
+      } else {
+        favorites.push(book);
+      }
+      localStorage.setItem('favorites', JSON.stringify(favorites));
+      renderReport();
+    }
+
+    function createHeartButton(book) {
+      const active = isFavorite(book) ? 'active' : '';
+      const iconType = isFavorite(book) ? 'fas' : 'far';
+      return `
+        <button class="heart-btn ${active}" onclick='toggleFavorite(${JSON.stringify(book)})' aria-label="افزودن به علاقه‌مندی‌ها">
+          <i class="${iconType} fa-heart"></i>
+        </button>`;
+    }
+
+    function createBookList(books) {
+      return books.map((book, index) => `
+        <div class="book-card">
+          <span class="book-number">${index + 1}</span>
+          <div><strong>📖 عنوان:</strong> ${book.title}</div>
+          <div><strong>✍️ نویسنده:</strong> ${book.author}</div>
+          <div><strong>📅 سال انتشار:</strong> ${book.year}</div>
+          <div><strong>🏷️ ژانر:</strong> ${book.genre}</div>
+          ${createHeartButton(book)}
+          <div style="clear:both"></div>
+        </div>
+      `).join('');
+    }
+
+    function renderReport() {
+      const totalBooksSection = document.getElementById('totalBooksSection');
+      const booksListSection = document.getElementById('booksListSection');
+      const genreRankingSection = document.getElementById('genreRankingSection');
+      const authorRankingSection = document.getElementById('authorRankingSection');
+      const oldestBooksSection = document.getElementById('oldestBooksSection');
+      const newestBooksSection = document.getElementById('newestBooksSection');
+
+      if (books.length === 0) {
+        totalBooksSection.innerHTML = '<p>❌ هیچ کتابی ثبت نشده است.</p>';
+        booksListSection.innerHTML = '';
+        genreRankingSection.innerHTML = '';
+        authorRankingSection.innerHTML = '';
+        oldestBooksSection.innerHTML = '';
+        newestBooksSection.innerHTML = '';
+        return;
+      }
+
+      totalBooksSection.innerHTML = '<div class="section-title">📚 تعداد کل کتاب‌ها:</div>' +
+                                    `<p>${books.length} کتاب</p>`;
+
+      booksListSection.innerHTML = '<div class="section-title">📖 فهرست کتاب‌ها:</div>' +
+                                   createBookList(books);
+
+      const genreCounts = {};
+      books.forEach(book => {
+        genreCounts[book.genre] = (genreCounts[book.genre] || 0) + 1;
+      });
+      const sortedGenres = Object.entries(genreCounts).sort((a, b) => b[1] - a[1]);
+      let genreHTML = '<div class="section-title">🏷️ رتبه‌بندی ژانرها:</div><table><thead><tr><th>ژانر</th><th>تعداد کتاب</th></tr></thead><tbody>';
+      sortedGenres.forEach(([genre, count]) => {
+        genreHTML += `<tr><td>${genre}</td><td>${count}</td></tr>`;
+      });
+      genreHTML += '</tbody></table>';
+      genreRankingSection.innerHTML = genreHTML;
+
+      const authorBooks = {};
+      books.forEach(book => {
+        if (!authorBooks[book.author]) authorBooks[book.author] = [];
+        authorBooks[book.author].push(book.title);
+      });
+      const sortedAuthors = Object.entries(authorBooks).sort((a, b) => b[1].length - a[1].length);
+      let authorHTML = '<div class="section-title">🧑‍💼 نویسندگان برتر:</div><table><thead><tr><th>نویسنده</th><th>تعداد کتاب</th><th>کتاب‌ها</th></tr></thead><tbody>';
+      sortedAuthors.forEach(([author, titles]) => {
+        authorHTML += `<tr><td>${author}</td><td>${titles.length}</td><td>${titles.join(", ")}</td></tr>`;
+      });
+      authorHTML += '</tbody></table>';
+      authorRankingSection.innerHTML = authorHTML;
+
+      const oldestBooks = [...books].sort((a, b) => a.year - b.year).slice(0, 3);
+      oldestBooksSection.innerHTML = '<div class="section-title">📘 قدیمی‌ترین کتاب‌ها:</div>' +
+                                     createBookList(oldestBooks);
+
+      const newestBooks = [...books].sort((a, b) => b.year - a.year).slice(0, 3);
+      newestBooksSection.innerHTML = '<div class="section-title">📗 جدیدترین کتاب‌ها:</div>' +
+                                     createBookList(newestBooks);
+    }
+
+    renderReport();
+  </script>
+</body>
+</html>
